@@ -1,6 +1,3 @@
-Yes. Below is a **complete submission-ready README** containing the project architecture, AWS setup, Docker, ECR, Jenkins, EKS, Helm, ALB, MongoDB persistence, HPA, validation, troubleshooting, and the important commands in **Bash code blocks**.
-
-You can replace your current `README.md` with this entire content.
 
 ````markdown
 # StreamingApp – MERN Application on AWS EKS
@@ -1971,51 +1968,3 @@ The application is accessible externally through the AWS Application Load Balanc
 
 ````
 
-### Then update and push it
-
-Since you don't want to use `EOF`, use this Python method:
-
-```bash
-cd /mnt/c/Users/mithu/StreamingApp
-
-python3 - <<'PY'
-from pathlib import Path
-
-# Paste the README content from above between the triple quotes.
-# If you save the content into a temporary file instead, simply copy it to README.md.
-
-print("Use the README content above to replace README.md")
-PY
-````
-
-**Easier and safer:** because the README is very long, I recommend using your editor instead of pasting another huge heredoc:
-
-```bash
-cd /mnt/c/Users/mithu/StreamingApp
-nano README.md
-```
-
-Delete the existing content, paste the complete README above, then:
-
-* `Ctrl + O`
-* `Enter`
-* `Ctrl + X`
-
-Then run:
-
-```bash
-git add README.md
-git commit -m "Complete project README documentation"
-git push origin main
-git status
-```
-
-You should finish with:
-
-```text
-Your branch is up to date with 'origin/main'.
-
-nothing to commit, working tree clean
-```
-
-**One important correction:** don't include real AWS access keys, secret keys, JWT secrets, or passwords anywhere in this README.
