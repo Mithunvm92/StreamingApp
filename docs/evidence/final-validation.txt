@@ -1,0 +1,68 @@
+===== DATE =====
+Fri Oct  2 16:51:56 UTC 2026
+
+===== GIT =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	docs/evidence/
+
+nothing added to commit but untracked files present (use "git add" to track)
+e1758f1 Add final submission documentation
+0e89f78 Add deployment and architecture documentation
+fe3f871 Complete StreamingApp AWS EKS orchestration and scaling
+2983167 Fix frontend API configuration for Kubernetes
+16843dc Test Jenkins GitHub webhook
+
+===== EKS =====
+NAME                                            STATUS   ROLES    AGE   VERSION                INTERNAL-IP      EXTERNAL-IP      OS-IMAGE                        KERNEL-VERSION                     CONTAINER-RUNTIME
+ip-192-168-0-54.ap-south-1.compute.internal     Ready    <none>   97m   v1.33.13-eks-3b4a6ca   192.168.0.54     15.252.240.123   Amazon Linux 2023.12.20260928   6.12.110-135.201.amzn2023.x86_64   containerd://2.2.7+unknown
+ip-192-168-46-121.ap-south-1.compute.internal   Ready    <none>   77m   v1.33.13-eks-3b4a6ca   192.168.46.121   65.2.111.166     Amazon Linux 2023.12.20260928   6.12.110-135.201.amzn2023.x86_64   containerd://2.2.7+unknown
+ip-192-168-75-240.ap-south-1.compute.internal   Ready    <none>   97m   v1.33.13-eks-3b4a6ca   192.168.75.240   13.201.124.37    Amazon Linux 2023.12.20260928   6.12.110-135.201.amzn2023.x86_64   containerd://2.2.7+unknown
+
+===== PODS =====
+NAME                                      READY   STATUS    RESTARTS      AGE     IP               NODE                                            NOMINATED NODE   READINESS GATES
+streamingapp-admin-787674dc44-8fc9p       1/1     Running   0             7m26s   192.168.55.10    ip-192-168-46-121.ap-south-1.compute.internal   <none>           <none>
+streamingapp-admin-787674dc44-grstb       1/1     Running   0             7m13s   192.168.0.65     ip-192-168-0-54.ap-south-1.compute.internal     <none>           <none>
+streamingapp-auth-77785d4b95-kslr6        1/1     Running   0             7m26s   192.168.55.191   ip-192-168-46-121.ap-south-1.compute.internal   <none>           <none>
+streamingapp-auth-77785d4b95-q4rq2        1/1     Running   0             7m12s   192.168.37.131   ip-192-168-46-121.ap-south-1.compute.internal   <none>           <none>
+streamingapp-chat-cd4859fd9-r467z         1/1     Running   0             7m13s   192.168.94.59    ip-192-168-75-240.ap-south-1.compute.internal   <none>           <none>
+streamingapp-chat-cd4859fd9-vd24j         1/1     Running   0             7m26s   192.168.68.226   ip-192-168-75-240.ap-south-1.compute.internal   <none>           <none>
+streamingapp-frontend-88cdb4cbd-k2x55     1/1     Running   0             12m     192.168.54.32    ip-192-168-46-121.ap-south-1.compute.internal   <none>           <none>
+streamingapp-frontend-88cdb4cbd-ngbv6     1/1     Running   0             12m     192.168.34.28    ip-192-168-46-121.ap-south-1.compute.internal   <none>           <none>
+streamingapp-mongo-658556f54c-gl7xb       1/1     Running   5 (65m ago)   67m     192.168.71.158   ip-192-168-75-240.ap-south-1.compute.internal   <none>           <none>
+streamingapp-streaming-5689b75bfc-ht6d9   1/1     Running   0             7m26s   192.168.50.81    ip-192-168-46-121.ap-south-1.compute.internal   <none>           <none>
+streamingapp-streaming-5689b75bfc-qjv5p   1/1     Running   0             7m12s   192.168.78.163   ip-192-168-75-240.ap-south-1.compute.internal   <none>           <none>
+
+===== SERVICES =====
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)     AGE
+admin-service        ClusterIP   10.100.203.9     <none>        3003/TCP    85m
+auth-service         ClusterIP   10.100.119.91    <none>        3001/TCP    85m
+chat-service         ClusterIP   10.100.153.251   <none>        3004/TCP    85m
+frontend             ClusterIP   10.100.49.132    <none>        80/TCP      85m
+streaming-service    ClusterIP   10.100.98.234    <none>        3002/TCP    85m
+streamingapp-mongo   ClusterIP   10.100.194.207   <none>        27017/TCP   82m
+
+===== INGRESS =====
+NAME           CLASS   HOSTS   ADDRESS                                                                   PORTS   AGE
+streamingapp   alb     *       k8s-streamin-streamin-ec1ff2e0b5-900594594.ap-south-1.elb.amazonaws.com   80      34m
+
+===== HPA =====
+NAME                     REFERENCE                           TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+streamingapp-admin       Deployment/streamingapp-admin       cpu: 2%/70%          2         3         2          7m28s
+streamingapp-auth        Deployment/streamingapp-auth        cpu: 1%/70%          2         3         2          7m28s
+streamingapp-chat        Deployment/streamingapp-chat        cpu: 2%/70%          2         3         2          7m28s
+streamingapp-frontend    Deployment/streamingapp-frontend    cpu: <unknown>/70%   2         3         2          7m28s
+streamingapp-streaming   Deployment/streamingapp-streaming   cpu: 1%/70%          2         3         2          7m28s
+
+===== HELM =====
+NAME        	NAMESPACE   	REVISION	UPDATED                                	STATUS  	CHART             	APP VERSION
+streamingapp	streamingapp	12      	2026-10-02 16:44:31.136770638 +0000 UTC	deployed	streamingapp-0.1.0	1.0.0      
+
+===== ALB TEST =====
+Frontend HTTP: 200
+Streaming HTTP: 200
+Admin HTTP: 401
+Chat HTTP: 401
