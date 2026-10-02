@@ -95,7 +95,7 @@ services:
       - admin
       - chat
     ports:
-      - "3000:80"
+      - "3010:80"
 
 volumes:
   mongo-data:

@@ -1,0 +1,80 @@
+#!/bin/bash
+set -e
+
+FILE="helm/streamingapp/templates/mongodb.yaml"
+
+cat > "$FILE" <<'YAML'
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "streamingapp.fullname" . }}-mongo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  resources:
+    requests:
+      storage: {{ .Values.mongodb.storage }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "streamingapp.fullname" . }}-mongo
+spec:
+  replicas: {{ .Values.replicaCount.mongo }}
+  selector:
+    matchLabels:
+      app: {{ include "streamingapp.fullname" . }}-mongo
+  template:
+    metadata:
+      labels:
+        app: {{ include "streamingapp.fullname" . }}-mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:7
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: {{ .Values.mongodb.database | quote }}
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+          readinessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 30
+            periodSeconds: 20
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: {{ include "streamingapp.fullname" . }}-mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "streamingapp.fullname" . }}-mongo
+spec:
+  selector:
+    app: {{ include "streamingapp.fullname" . }}-mongo
+  ports:
+    - port: 27017
+      targetPort: 27017
+      protocol: TCP
+YAML
+
+echo "MongoDB Helm template repaired."
+
+echo
+echo "Validating Helm chart..."
+helm lint helm/streamingapp
+
+echo
+echo "Validating rendered PVC..."
+helm template streamingapp helm/streamingapp | sed -n '/kind: PersistentVolumeClaim/,/---/p'

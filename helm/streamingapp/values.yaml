@@ -1,0 +1,50 @@
+replicaCount:
+  frontend: 2
+  auth: 2
+  streaming: 2
+  admin: 2
+  chat: 2
+  mongo: 1
+
+image:
+  registry: 075237969193.dkr.ecr.ap-south-1.amazonaws.com
+  tag: build-4
+
+services:
+  frontend:
+    name: frontend
+    port: 80
+
+  auth:
+    name: auth-service
+    port: 3001
+
+  streaming:
+    name: streaming-service
+    port: 3002
+
+  admin:
+    name: admin-service
+    port: 3003
+
+  chat:
+    name: chat-service
+    port: 3004
+
+  mongo:
+    name: streamingapp-mongo
+    port: 27017
+
+mongodb:
+  database: streamingapp
+  storage: 5Gi
+
+ingress:
+  enabled: true
+  className: alb
+  host: ""
+
+secrets:
+  jwtSecret: "CHANGE_ME"
+  awsAccessKeyId: ""
+  awsSecretAccessKey: ""

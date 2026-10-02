@@ -1,0 +1,39 @@
+{{- $services := list "frontend" "auth" "streaming" "admin" "chat" }}
+
+{{- range $svc := $services }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "streamingapp.fullname" $ }}-{{ $svc }}
+  labels:
+    app: {{ include "streamingapp.name" $ }}
+    component: {{ $svc }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "streamingapp.fullname" $ }}-{{ $svc }}
+  minReplicas: 2
+  maxReplicas: 3
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 60
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+{{- end }}
